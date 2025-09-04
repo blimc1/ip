@@ -1,6 +1,9 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Doge {
+    private static final String LINE = "____________________________________________________________";
+    private static final int MAX_TASKS = 100;
     public static void main(String[] args) {
         String logo = " ____                   \n" +
                 "|  _ \\  ___   __ _  ___ \n" +
@@ -9,60 +12,94 @@ public class Doge {
                 "|____/ \\___/ \\__, |\\___|\n" +
                 "             |___/      ";
         System.out.println("Hello from\n" + logo);
-        System.out.println("____________________________________________________________\n" +
-                " Hello! Am Doge\n" +
-                " What can I do for you?\n" +
-                "____________________________________________________________\n");
+        System.out.println(LINE);
+        System.out.println("Hello! Am Doge");
+        System.out.println("What can I do for you?");
+        System.out.println(LINE);
 
         //creates a scanner object to read the input
         Scanner scanner = new Scanner(System.in);
 
         //array to store text input by the user
-        Task[] taskList = new Task[100];
+        Task[] taskList = new Task[MAX_TASKS];
         int numberOfTasks = 0;
+
 
         while(true) {
             String input = scanner.nextLine(); //reads input
-            Task t = new Task(input);
+            String[] inputParts = input.split(" ", 2); //only splits at the first " "
+            String command = inputParts[0];
 
-            if (input.equals("bye")) { //handles exit
-                System.out.println("____________________________________________________________\n" +
-                        " Bye. Hope to see you again soon!\n" +
-                        "____________________________________________________________\n");
-                break;
-            } else if (input.equals("list")) {
-                System.out.println("____________________________________________________________\n" +
-                        "Here are the tasks in your list:");
-                for (int i = 0; i < numberOfTasks; i++) {
-                    System.out.println((i + 1) + "." + taskList[i].listTasks());
-                }
-                System.out.println("____________________________________________________________\n");
-            } else if (input.startsWith("mark ")) { //mark as done
-                String[] inputParts  = input.split(" ");
-                int taskNumber = Integer.parseInt(inputParts[1]) - 1;
-                taskList[taskNumber].markAsDone();
-                System.out.println("____________________________________________________________\n" +
-                        "Nice! I've marked this task as done: \n" +
-                        taskList[taskNumber].listTasks() +
-                        "\n____________________________________________________________\n");
-            } else if (input.startsWith("unmark ")) { //unmark done task
-                String[] inputParts  = input.split(" ");
-                int taskNumber = Integer.parseInt(inputParts[1]) - 1; //converts string to int
-                taskList[taskNumber].markAsNotDone();
-                System.out.println("____________________________________________________________\n" +
-                        "OK, I've marked this task as not done yet: \n" +
-                        taskList[taskNumber].listTasks() +
-                        "\n____________________________________________________________\n");
-            } else { //echo task
-                taskList[numberOfTasks] = t;
-                numberOfTasks++;
-                System.out.println("____________________________________________________________\n" +
-                        "added: " + input +
-                        "\n____________________________________________________________\n");
+            switch (command) {
+                case "bye":
+                    System.out.println(LINE);
+                    System.out.println(" Bye. Hope to see you again soon!");
+                    System.out.println(LINE);
+                    scanner.close();
+                    return;
+                case "list":
+                    System.out.println(LINE);
+                    System.out.println("Here are the tasks in your list:");
+                    for (int i = 0; i < numberOfTasks; i++) {
+                        System.out.println((i + 1) + "." + taskList[i].listTasks());
+                    }
+                    System.out.println(LINE);
+                    break;
+                case "mark":
+                    int markIndex = Integer.parseInt(inputParts[1]) - 1; //converts string to int
+                    taskList[markIndex].markAsDone();
+                    System.out.println(LINE);
+                    System.out.println("Nice! I've marked this task as done:");
+                    System.out.println(taskList[markIndex].listTasks());
+                    System.out.println(LINE);
+                    break;
+                case "unmark":
+                    int unmarkIndex = Integer.parseInt(inputParts[1]) - 1;
+                    taskList[unmarkIndex].markAsNotDone();
+                    System.out.println(LINE);
+                    System.out.println("OK, I've marked this task as not done yet:");
+                    System.out.println(taskList[unmarkIndex].listTasks());
+                    System.out.println(LINE);
+                    break;
+                case "todo":
+                    taskList[numberOfTasks] = new ToDo(inputParts[1]);
+                    System.out.println(LINE);
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println(taskList[numberOfTasks].listTasks());
+                    numberOfTasks++;
+                    System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+                    System.out.println(LINE);
+                    break;
+                case "deadline":
+                    String[] deadlineParts = inputParts[1].split(" /by ");
+                    taskList[numberOfTasks] = new Deadline(deadlineParts[0], deadlineParts[1]);
+                    System.out.println(LINE);
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println(taskList[numberOfTasks].listTasks());
+                    numberOfTasks++;
+                    System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+                    System.out.println(LINE);
+                    break;
+                case "event":
+                    String[] eventParts = inputParts[1].split(" /from ");
+                    String[] fromToParts = eventParts[1].split(" /to "); //getting the from: and to: parts
+                    taskList[numberOfTasks] = new Event(eventParts[0], fromToParts[0], fromToParts[1]);
+                    System.out.println(LINE);
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println(taskList[numberOfTasks].listTasks());
+                    numberOfTasks++;
+                    System.out.println("Now you have " + numberOfTasks + " tasks in the list.");
+                    System.out.println(LINE);
+                    break;
+                default:
+                    taskList[numberOfTasks] = new Task(input);
+                    numberOfTasks++;
+                    System.out.println(LINE);
+                    System.out.println("added: " + input);
+                    System.out.println(LINE);
+                    break;
             }
         }
-
-        scanner.close();
     }
 
 }
