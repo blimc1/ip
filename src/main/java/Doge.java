@@ -37,18 +37,12 @@ public class Doge {
             try {
                 switch (command) {
                     case "bye":
-                        if (inputParts.length == 1) {
-                            throw new EmptyDescriptionException();
-                        }
                         System.out.println(LINE);
                         System.out.println(" Bye. Hope to see you again soon!");
                         System.out.println(LINE);
                         scanner.close();
                         return;
                     case "list":
-                        if (inputParts.length == 1) {
-                            throw new EmptyDescriptionException();
-                        }
                         System.out.println(LINE);
                         System.out.println("Here are the tasks in your list:");
                         for (int i = 0; i < numberOfTasks; i++) {
