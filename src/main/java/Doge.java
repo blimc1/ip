@@ -18,8 +18,6 @@ public class Doge {
     private static void loadTasks(ArrayList<Task> taskList) throws DogeException {
         try{
             File f = new File(DATA_FILE);
-            //create directory if it doesn't exist
-            f.getParentFile().mkdirs();
 
             if(!f.exists()){ //file doesn't exist, start with new list through saveTasks
                 return;
@@ -75,7 +73,11 @@ public class Doge {
     private static void saveTasks(ArrayList<Task> taskList) throws DogeException {
         try{
             File f = new File(DATA_FILE);
-            f.getParentFile().mkdirs();
+            //checks if the file exists, and creates it if it doesn't exist, else throws an error
+            if (f.getParentFile() != null && !f.getParentFile().mkdirs() &&  !f.getParentFile().exists()) {
+                throw new  DogeException("Error: Directory not created: " + f.getParentFile().getAbsolutePath());
+            }
+
             FileWriter fw = new FileWriter(DATA_FILE);
             for (Task task : taskList){
                 String line;
