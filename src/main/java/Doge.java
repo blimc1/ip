@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class Doge {
     private static final String LINE = "____________________________________________________________";
-    private static final int MAX_TASKS = 100;
     private static final String DATA_DIR =  "data";
     private static final String DATA_FILE = DATA_DIR + "/doge.txt";
 
@@ -83,11 +82,9 @@ public class Doge {
                 String doneStatus = task.isDone ? "1" : "0";
                 if (task instanceof ToDo){
                     line = "T | " + doneStatus + " | "+ task.description;
-                } else if (task instanceof Deadline){
-                    Deadline dTask = (Deadline) task; //to access the "by" field
+                } else if (task instanceof Deadline dTask){ //to access the "by" field
                     line  = "D | " + doneStatus + " | "+ task.description + " | " + dTask.by;
-                } else if (task instanceof Event){
-                    Event eTask = (Event) task;
+                } else if (task instanceof Event eTask){
                     line = "E | " + doneStatus + " | "+ task.description + " | " + eTask.from + " to " + eTask.to;
                 } else {
                     continue;
@@ -211,6 +208,9 @@ public class Doge {
                         saveTasks(taskList);
                         break;
                     case "delete":
+                        if (inputParts.length == 1) {
+                            throw new EmptyDescriptionException();
+                        }
                         int deleteIndex = Integer.parseInt(inputParts[1]) - 1;
                         System.out.println(LINE);
                         System.out.println("Aight. Task deletus:");
