@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Parser {
     public boolean parse(String input, TaskList tasks, Ui ui, Storage storage)  throws DogeException{
         if (input.trim().isEmpty()) {
@@ -20,9 +22,21 @@ public class Parser {
             case "delete":
                 deleteTask(inputParts, tasks, ui, storage);
                 return false;
+            case "find":
+                handleFind(inputParts, tasks, ui);
+                return false;
             default:
                 throw new UnknownCommandException();
         }
+    }
+
+    private void handleFind (String[] inputParts, TaskList tasks, Ui ui) throws DogeException{
+        if (inputParts.length < 2) {
+            throw new EmptyDescriptionException();
+        }
+        String keyword = inputParts[1];
+        ArrayList<Task> matches = tasks.find(keyword);
+        ui.showMatchingTasks(matches);
     }
 
     private void addTask (String command, String[] inputParts, TaskList tasks, Ui ui, Storage storage)
