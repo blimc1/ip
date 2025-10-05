@@ -18,55 +18,59 @@ public class Doge {
     private static void loadTasks(ArrayList<Task> taskList) throws DogeException {
         try{
             File f = new File(DATA_FILE);
-
             if(!f.exists()){ //file doesn't exist, start with new list through saveTasks
                 return;
             }
 
             Scanner sc = new Scanner(f);
             while(sc.hasNextLine()){
-                String line = sc.nextLine();
-                String[] lineParts = line.split(" \\|");
-                if(lineParts.length < 3){
-                    continue; //skip that task
+                Task task = parseTask(sc.nextLine());
+                if(task != null){
+                    taskList.add(task);
                 }
-                //different parts of the tasks
-                String type = lineParts[0];
-                boolean isDone = lineParts[1].equals("1");
-                String description = lineParts[2];
-                Task task;
-
-                switch(type){
-                    case "T":
-                        task = new ToDo(description);
-                        break;
-                    case "D":
-                        if (lineParts.length < 4){
-                            continue;
-                        }
-                        task = new Deadline(description, lineParts[3]);
-                        break;
-                    case "E":
-                        if  (lineParts.length < 4){
-                            continue;
-                        }
-                        String[] eventTimes = lineParts[3].split(" to ");
-                        if (eventTimes.length < 2){
-                            continue;
-                        }
-                        task = new Event(description, eventTimes[0], eventTimes[1]);
-                        break;
-                    default:
-                        continue;
-                }
-                if(isDone){
-                    task.markAsDone();
-                }
-                taskList.add(task);
             }
             sc.close();
         } catch (FileNotFoundException e) {
             throw new DogeException("Error: File not found: " + e.getMessage());
+        }
+    }
+
+    private static Task parseTask(String line) {
+        String[] lineParts = line.split(" \\|");
+        if(lineParts.length < 3){
+            return null; //skip that task
+        }
+        //different parts of the tasks
+        String type = lineParts[0];
+        boolean isDone = lineParts[1].equals("1");
+        String description = lineParts[2];
+        Task task = createTask(type, description, lineParts);
+        if (task != null && isDone){
+            task.markAsDone();
+        }
+        return task;
+    }
+
+    private static Task createTask(String type, String description, String[] lineParts) {
+        switch(type){
+        case "T":
+            return new ToDo(description);
+        case "D":
+            if (lineParts.length < 4){
+                return null;
+            }
+            return new Deadline(description, lineParts[3]);
+        case "E":
+            if  (lineParts.length < 4){
+                return null;
+            }
+            String[] eventTimes = lineParts[3].split(" to ");
+            if (eventTimes.length < 2){
+                return null;
+            }
+            return new Event(description, eventTimes[0], eventTimes[1]);
+        default:
+            return null;
         }
     }
 
@@ -99,7 +103,11 @@ public class Doge {
         }
     }
 
-    public static void main(String[] args) {
+    private static void printLine(){
+        System.out.println(LINE);
+    }
+
+    private static void printWelcome(){
         String logo = " ____                   \n" +
                 "|  _ \\  ___   __ _  ___ \n" +
                 "| | | |/ _ \\ / _` |/ _ \\\n" +
@@ -107,22 +115,104 @@ public class Doge {
                 "|____/ \\___/ \\__, |\\___|\n" +
                 "             |___/      ";
         System.out.println("Hello from\n" + logo);
-        System.out.println(LINE);
+        printLine();
         System.out.println("Hello! Am Doge");
         System.out.println("What can I do for you?");
-        System.out.println(LINE);
+        printLine();
+    }
 
-        //creates a scanner object to read the input
+    private static void handleBye(){
+        printLine();
+        System.out.println(" Bye. Hope to see you again soon!");
+        printLine();
+    }
+
+    private static void listTasks(ArrayList<Task> taskList) {
+        printLine();
+        System.out.println("Here are the tasks in your list:");
+        for (int i = 0; i < taskList.size(); i++) {
+            System.out.println((i + 1) + "." + taskList.get(i).listTasks());
+        }
+        printLine();
+    }
+
+    private static void printNewTaskSummary(ArrayList<Task> taskList) {
+        printLine();
+        System.out.println("Got it. I've added this task:");
+        System.out.println(taskList.get(taskList.size() - 1).listTasks());
+        System.out.println("Now you have " + taskList.size() + " tasks in the list.");
+        printLine();
+    }
+
+    private static void addTask(String command, String[] inputParts, ArrayList<Task> taskList) throws DogeException {
+        if (inputParts.length == 1) {
+            throw new EmptyDescriptionException();
+        }
+        switch (command) {
+            case "todo":
+                taskList.add(new ToDo(inputParts[1]));
+                printNewTaskSummary(taskList);
+                break;
+            case "deadline":
+                String[] deadlineParts = inputParts[1].split(" /by ");
+                taskList.add(new Deadline(deadlineParts[0], deadlineParts[1]));
+                printNewTaskSummary(taskList);
+                break;
+            case "event":
+                String[] eventParts = inputParts[1].split(" /from ");
+                String[] fromToParts = eventParts[1].split(" /to "); //getting the from: and to: parts
+                taskList.add(new Event(eventParts[0], fromToParts[0], fromToParts[1]));
+                printNewTaskSummary(taskList);
+                break;
+            default:
+                throw new UnknownCommandException();
+        }
+        saveTasks(taskList);
+    }
+
+    private static void toggleTaskStatus(String cmd, String[] inputParts, ArrayList<Task> taskList) throws DogeException {
+        if (inputParts.length == 1) {
+            throw new EmptyDescriptionException();
+        }
+        int index = Integer.parseInt(inputParts[1]) - 1;
+        printLine();
+        if (cmd.equals("mark")){
+            taskList.get(index).markAsDone();
+            System.out.println("Nice! I've marked this task as done:");
+        } else {
+            taskList.get(index).markAsNotDone();
+            System.out.println("OK, I've marked this task as not done yet:");
+        }
+        System.out.println(taskList.get(index).listTasks());
+        printLine();
+        saveTasks(taskList);
+    }
+
+    private static void deleteTask(String[] inputParts, ArrayList<Task> taskList) throws DogeException {
+        if (inputParts.length == 1) {
+            throw new EmptyDescriptionException();
+        }
+        int index = Integer.parseInt(inputParts[1]) - 1;
+        printLine();
+        System.out.println("Aight. Task deletus:");
+        System.out.println(taskList.get(index).listTasks());
+        taskList.remove(index);
+        System.out.println("Now you have " + taskList.size() + " tasks in the list.");
+        printLine();
+        saveTasks(taskList);
+    }
+
+    public static void main(String[] args) {
+        printWelcome();
         Scanner scanner = new Scanner(System.in);
 
-        //array to store text input by the user
         ArrayList<Task> taskList = new ArrayList<>();
         try{
             loadTasks(taskList);
         }catch(DogeException e){
-            System.out.println(LINE);
+            printLine();
             System.out.println(e.getMessage());
-            System.out.println(LINE);
+            printLine();
         }
 
         while(true) {
@@ -132,103 +222,29 @@ public class Doge {
 
             try {
                 switch (command) {
-                    case "bye":
-                        System.out.println(LINE);
-                        System.out.println(" Bye. Hope to see you again soon!");
-                        System.out.println(LINE);
-                        scanner.close();
-                        return;
-                    case "list":
-                        System.out.println(LINE);
-                        System.out.println("Here are the tasks in your list:");
-                        for (int i = 0; i < taskList.size(); i++) {
-                            System.out.println((i + 1) + "." + taskList.get(i).listTasks());
-                        }
-                        System.out.println(LINE);
-                        break;
-                    case "mark":
-                        if (inputParts.length == 1) {
-                            throw new EmptyDescriptionException();
-                        }
-                        int markIndex = Integer.parseInt(inputParts[1]) - 1; //converts string to int
-                        taskList.get(markIndex).markAsDone();
-                        System.out.println(LINE);
-                        System.out.println("Nice! I've marked this task as done:");
-                        System.out.println(taskList.get(markIndex).listTasks());
-                        System.out.println(LINE);
-                        saveTasks(taskList);
-                        break;
-                    case "unmark":
-                        if (inputParts.length == 1) {
-                            throw new EmptyDescriptionException();
-                        }
-                        int unmarkIndex = Integer.parseInt(inputParts[1]) - 1;
-                        taskList.get(unmarkIndex).markAsNotDone();
-                        System.out.println(LINE);
-                        System.out.println("OK, I've marked this task as not done yet:");
-                        System.out.println(taskList.get(unmarkIndex).listTasks());
-                        System.out.println(LINE);
-                        saveTasks(taskList);
-                        break;
-                    case "todo":
-                        if (inputParts.length == 1) {
-                            throw new EmptyDescriptionException();
-                        }
-                        taskList.add(new ToDo(inputParts[1]));
-                        System.out.println(LINE);
-                        System.out.println("Got it. I've added this task:");
-                        System.out.println(taskList.get(taskList.size() - 1).listTasks());
-                        System.out.println("Now you have " + taskList.size() + " tasks in the list.");
-                        System.out.println(LINE);
-                        saveTasks(taskList);
-                        break;
-                    case "deadline":
-                        if (inputParts.length == 1) {
-                            throw new EmptyDescriptionException();
-                        }
-                        String[] deadlineParts = inputParts[1].split(" /by ");
-                        taskList.add(new Deadline(deadlineParts[0], deadlineParts[1]));
-                        System.out.println(LINE);
-                        System.out.println("Got it. I've added this task:");
-                        System.out.println(taskList.get(taskList.size() - 1).listTasks());
-                        System.out.println("Now you have " + taskList.size() + " tasks in the list.");
-                        System.out.println(LINE);
-                        saveTasks(taskList);
-                        break;
-                    case "event":
-                        if (inputParts.length == 1) {
-                            throw new EmptyDescriptionException();
-                        }
-                        String[] eventParts = inputParts[1].split(" /from ");
-                        String[] fromToParts = eventParts[1].split(" /to "); //getting the from: and to: parts
-                        taskList.add(new Event(eventParts[0], fromToParts[0], fromToParts[1]));
-                        System.out.println(LINE);
-                        System.out.println("Got it. I've added this task:");
-                        System.out.println(taskList.get(taskList.size() - 1).listTasks());
-                        System.out.println("Now you have " + taskList.size() + " tasks in the list.");
-                        System.out.println(LINE);
-                        saveTasks(taskList);
-                        break;
-                    case "delete":
-                        if (inputParts.length == 1) {
-                            throw new EmptyDescriptionException();
-                        }
-                        int deleteIndex = Integer.parseInt(inputParts[1]) - 1;
-                        System.out.println(LINE);
-                        System.out.println("Aight. Task deletus:");
-                        System.out.println(taskList.get(deleteIndex).listTasks());
-                        taskList.remove(deleteIndex);
-                        System.out.println("Now you have " + taskList.size() + " tasks in the list.");
-                        System.out.println(LINE);
-                        saveTasks(taskList);
-                        break;
-                    default:
-                        throw new UnknownCommandException();
+                case "bye":
+                    handleBye();
+                    scanner.close();
+                    return;
+                case "list":
+                    listTasks(taskList);
+                    break;
+                case "mark", "unmark":
+                    toggleTaskStatus(command, inputParts, taskList);
+                    break;
+                case "todo", "deadline", "event":
+                    addTask(command, inputParts, taskList);
+                    break;
+                case "delete":
+                    deleteTask(inputParts, taskList);
+                    break;
+                default:
+                    throw new UnknownCommandException();
                 }
             } catch (DogeException e){
-                System.out.println(LINE);
+                printLine();
                 System.out.println(e.getMessage());
-                System.out.println(LINE);
+                printLine();
             }
         }
     }
