@@ -35,8 +35,8 @@ public class Parser {
             throw new EmptyDescriptionException();
         }
         String keyword = inputParts[1];
-        ArrayList<Task> matches = tasks.find(keyword);
-        ui.showMatchingTasks(matches);
+        ArrayList<Task> matchesFound = tasks.find(keyword);
+        ui.showMatchingTasks(matchesFound);
     }
 
     private void addTask (String command, String[] inputParts, TaskList tasks, Ui ui, Storage storage)
