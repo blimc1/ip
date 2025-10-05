@@ -80,22 +80,36 @@ public class Parser {
         if (inputParts.length == 1) {
             throw new EmptyDescriptionException();
         }
-        int index = Integer.parseInt(inputParts[1]) - 1;
-        boolean isMarked = command.equals("mark");
-        tasks.toggleStatus(index, isMarked);
-        ui.showMarkedTask(tasks.getTasks().get(index),  isMarked);
-        storage.save(tasks.getTasks());
+        try {
+            int index = Integer.parseInt(inputParts[1]) - 1;
+            if (index < 0 || index >= tasks.getTasks().size()) {
+                throw new InvalidIndexException();
+            }
+            boolean isMarked = command.equals("mark");
+            tasks.toggleStatus(index, isMarked);
+            ui.showMarkedTask(tasks.getTasks().get(index), isMarked);
+            storage.save(tasks.getTasks());
+        } catch (NumberFormatException e) {
+            throw new InvalidIndexException();
+        }
     }
 
     private void deleteTask (String[] inputParts, TaskList tasks, Ui ui, Storage storage) throws DogeException{
         if (inputParts.length == 1) {
             throw new EmptyDescriptionException();
         }
-        int index = Integer.parseInt(inputParts[1]) - 1;
-        Task deletedTask = tasks.getTasks().get(index);
-        tasks.delete(index);
-        ui.showDeletedTask(deletedTask, tasks.getTasks());
-        storage.save(tasks.getTasks());
+        try {
+            int index = Integer.parseInt(inputParts[1]) - 1;
+            if (index < 0 || index >= tasks.getTasks().size()) {
+                throw new InvalidIndexException();
+            }
+            Task deletedTask = tasks.getTasks().get(index);
+            tasks.delete(index);
+            ui.showDeletedTask(deletedTask, tasks.getTasks());
+            storage.save(tasks.getTasks());
+        } catch (NumberFormatException e) {
+            throw new InvalidIndexException();
+        }
     }
 
     public static Task parseTask(String line){
