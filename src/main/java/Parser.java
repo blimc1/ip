@@ -113,7 +113,7 @@ public class Parser {
     }
 
     public static Task parseTask(String line){
-        String[] lineParts = line.split(" \\|");
+        String[] lineParts = line.split(" \\| ");
         if(lineParts.length < 3){
             return null;
         }
