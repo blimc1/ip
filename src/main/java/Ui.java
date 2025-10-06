@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Handles all user interface interactions for the Doge application.
+ * Responsible for printing messages, errors, and task lists updates.
+ */
 public class Ui {
     private static final String LINE = "____________________________________________________________";
     private static final String logo = " ____                   \n" +
@@ -14,6 +18,9 @@ public class Ui {
         System.out.println(LINE);
     }
 
+    /**
+     * Displays the welcome message with logo.
+     */
     public void printWelcome(){
         System.out.println("Hello from\n" + logo);
         printLine();
@@ -22,24 +29,42 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Displays the goodbye message.
+     */
     public void showBye(){
         printLine();
         System.out.println(" Bye. Hope to see you again soon!");
         printLine();
     }
 
+    /**
+     * Displays an error message.
+     *
+     * @param message The error message to be displayed.
+     */
     public void showError(String message){
         printLine();
         System.out.println(message);
         printLine();
     }
 
+    /**
+     * Displays a loading error message if tasks are unable to load.
+     *
+     * @param message Loading error message.
+     */
     public void showLoadingError(String message){
         printLine();
         System.out.println("Error loading tasks: " + message);
         printLine();
     }
 
+    /**
+     * Displays a numbered list of all tasks in the list.
+     *
+     * @param taskList List of tasks to display.
+     */
     public void showTaskList(ArrayList<Task> taskList) {
         printLine();
         System.out.println("Here are the tasks in your list:");
@@ -49,6 +74,11 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Displays a summary after adding new tasks, including task details and total task count.
+     *
+     * @param taskList The updated list of tasks.
+     */
     public void showNewTaskSummary(ArrayList<Task> taskList) {
         printLine();
         System.out.println("Got it. I've added this task:");
@@ -57,6 +87,12 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Displays a message after marking or unmarking a task.
+     *
+     * @param task The marked/unmarked task.
+     * @param isMarked True if marked as done, false if unmarked.
+     */
     public void showMarkedTask(Task task, boolean isMarked) {
         printLine();
         if (isMarked){
@@ -68,6 +104,12 @@ public class Ui {
         printLine();
     }
 
+    /**
+     * Displays a confirmation message after deleting a task.
+     *
+     * @param task The deleted task.
+     * @param taskList The updated list of tasks.
+     */
     public void showDeletedTask(Task task, ArrayList<Task> taskList) {
         printLine();
         System.out.println("Aight. Task deletus:");
@@ -80,6 +122,11 @@ public class Ui {
         return scanner.nextLine();
     }
 
+    /**
+     * Displays a matching tasks from searching.
+     *
+     * @param matches The list of matching tasks.
+     */
     public void showMatchingTasks (ArrayList<Task> matches){
         printLine();
         if (matches.isEmpty()){
