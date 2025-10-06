@@ -83,7 +83,7 @@ public class Ui {
     public void showMatchingTasks (ArrayList<Task> matches){
         printLine();
         if (matches.isEmpty()){
-            System.out.println("No matching tasks found.");
+            System.out.println("BONK! No matching tasks found.");
         } else {
             System.out.println("Matching tasks found:");
             for (int i = 0; i < matches.size(); i++) {
