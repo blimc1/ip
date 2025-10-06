@@ -1,26 +1,169 @@
-# Duke project template
+# Doge User Guide
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+Doge is a Java-based CLI task manager chatbot to help users keep track of various types of tasks.
 
-## Setting up in Intellij
+## Quick Start
+This chatbot runs on Java 17, so please ensure that you have it installed on your computer.
 
-Prerequisites: JDK 17, update Intellij to the most recent version.
+Download the latest .jar file.
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 17** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/Duke.java` file, right-click it, and choose `Run Duke.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
-   ```
-   Hello from
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
-   ```
+Open a terminal and cd into the folder that you saved the .jar file in.
 
-**Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+Run java -jar Doge.jar.
+
+
+## Features
+### Adding Tasks
+
+---
+#### ToDo - Adds a basic task without dates or times
+
+Input: `todo <task>`
+
+Note: `<task>` cannot be empty
+
+Expected example input and output:
+```
+todo read book
+____________________________________________________________
+Got it. I've added this task:
+[T][ ] read book
+Now you have 1 tasks in the list.
+____________________________________________________________
+```
+---
+#### Deadline - Adds a task with a due date/time
+
+Input: `deadline <task> /by <time>`
+
+Note: `<task>` and `<time>` cannot be empty
+
+Expected example input and output:
+
+```
+deadline finish reading book /by tomorrow
+____________________________________________________________
+Got it. I've added this task:
+[D][ ] finish reading book (by: tomorrow)
+Now you have 2 tasks in the list.
+____________________________________________________________
+
+```
+---
+#### Event - Adds a task with a start and end time
+
+Input: `event <task> /from <time> /to <time>`
+
+Note: `<task>` and `<time>`s cannot be empty
+
+Expected example input and output:
+
+```
+event continue reading book /from now /to 2pm
+____________________________________________________________
+Got it. I've added this task:
+[E][ ] continue reading book (from: now to: 2pm)
+Now you have 3 tasks in the list.
+____________________________________________________________
+
+```
+---
+#### List - Lists all tasks
+
+Input: `list`
+
+Expected input and output:
+
+```
+list
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+2.[D][ ] finish reading book (by: tomorrow)
+3.[E][ ] continue reading book (from: now to: 2pm)
+____________________________________________________________
+```
+---
+#### Mark - Marks a task as done
+
+Input: `mark <task number>`
+
+Note: `<task number>` cannot be empty
+
+Expected example input and output:
+
+```
+mark 3
+____________________________________________________________
+Nice! I've marked this task as done:
+[E][X] continue reading book (from: now to: 2pm)
+____________________________________________________________
+```
+---
+#### Unmark - Unmarks a task previously marked as done
+
+Input: `unmark <task number>`
+
+Note: `<task number>` cannot be empty
+
+Expected example input and output:
+
+```
+unmark 3
+____________________________________________________________
+OK, I've marked this task as not done yet:
+[E][ ] continue reading book (from: now to: 2pm)
+____________________________________________________________
+
+```
+---
+#### Delete - Deletes a task from the list
+
+Input: `delete <task number>`
+
+Note: `<task number>` cannot be empty
+
+Expected example input and output:
+
+```
+delete 1
+____________________________________________________________
+Aight. Task deletus:
+[T][ ] read book
+Now you have 2 tasks in the list.
+____________________________________________________________
+```
+---
+#### Find - Find a task based on a specific keyword
+
+Input: `find <keyword(s)>`
+
+Note:
+`<keyword(s)>` cannot be empty, and must be an exact match of what you want to find
+
+Expected example input and output:
+
+```
+find reading book
+____________________________________________________________
+Nice! I've marked this task as done:
+[E][X] continue reading book (from: now to: 2pm)
+____________________________________________________________
+```
+---
+#### Bye - Exit the chatbot
+
+Input: `bye`
+
+Expected example input and output:
+
+```
+bye
+____________________________________________________________
+ Bye. Hope to see you again soon!
+____________________________________________________________
+```
+---
+## Saving and loading tasks
+* The chatbot automatically saves whatever tasks you have inputted
+* You will be able to recall the saved tasks after re-opening the chatbot
