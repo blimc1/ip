@@ -1,6 +1,21 @@
 import java.util.ArrayList;
 
+/**
+ * Parses user input and assigns them to the appropriate handlers.
+ * Supports "bye", "list", "mark", "unmark", "todo", "deadline", "event", "delete", and "find" commands.
+ * Throws exceptions for invalid inputs.
+ */
 public class Parser {
+    /**
+     * Parses user commands and executes it using the appropriate method.
+     *
+     * @param input The raw user input string.
+     * @param tasks The task list to operate on.
+     * @param ui The UI to display appropriate messages.
+     * @param storage The storage for saving changes.
+     * @return true if user enters "bye" to exit, false otherwise.
+     * @throws DogeException If there is parsing or execution errors.
+     */
     public boolean parse(String input, TaskList tasks, Ui ui, Storage storage)  throws DogeException{
         if (input.trim().isEmpty()) {
             throw new UnknownCommandException();
@@ -112,6 +127,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses each line in the saved file into a Task object.
+     * Skips invalid lines.
+     *
+     * @param line The raw line from the saved file.
+     * @return The parsed task, or null if invalid.
+     */
     public static Task parseTask(String line){
         String[] lineParts = line.split(" \\| ");
         if(lineParts.length < 3){

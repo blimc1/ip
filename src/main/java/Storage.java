@@ -5,17 +5,32 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Handles saving and loading tasks, to and from a specified file.
+ */
 public class Storage {
     private final String filePath;
 
+    /**
+     * Constructs a new Storage instance.
+     *
+     * @param filePath Path to the data file.
+     */
     public Storage(String filePath){
         this.filePath = filePath;
     }
 
+    /**
+     * Loads all the tasks from the file into an ArrayList.
+     * Skips lines stored tasks that are not properly formatted.
+     *
+     * @return a new ArrayList of the stored tasks.
+     * @throws DogeException If the file cannot be read.
+     */
     public ArrayList<Task> load() throws DogeException{
         ArrayList<Task> taskList = new ArrayList<>();
         File file = new File(filePath);
-        if(!file.exists()){ //file doesn't exist, start with new list through saveTasks
+        if(!file.exists()){
             return taskList;
         }
         try (Scanner sc = new Scanner(file)){
@@ -31,6 +46,13 @@ public class Storage {
         return taskList;
     }
 
+    /**
+     * Saves the current task list to file.
+     * Creates parent directory if it does not exist.
+     *
+     * @param taskList The list of tasks to save.
+     * @throws DogeException If the file cannot be written to.
+     */
     public void save(ArrayList<Task> taskList) throws DogeException{
         File file = new File(filePath);
         if (file.getParentFile() != null && !file.getParentFile().mkdirs() &&  !file.getParentFile().exists()) {
