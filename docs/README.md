@@ -14,6 +14,7 @@ Run java -jar Doge.jar.
 
 ## Features
 ### Adding Tasks
+---
 #### ToDo - Adds a basic task without dates or times
 
 Input: `todo <task>`
@@ -29,7 +30,7 @@ Got it. I've added this task:
 Now you have 1 tasks in the list.
 ____________________________________________________________
 ```
-
+---
 #### Deadline - Adds a task with a due date/time
 
 Input: `deadline <task> /by <time>`
@@ -47,7 +48,7 @@ Now you have 2 tasks in the list.
 ____________________________________________________________
 
 ```
-
+---
 #### Event - Adds a task with a start and end time
 
 Input: `event <task> /from <time> /to <time>`
@@ -65,7 +66,7 @@ Now you have 3 tasks in the list.
 ____________________________________________________________
 
 ```
-
+---
 #### List - Lists all tasks
 
 Input: `list`
@@ -81,7 +82,7 @@ Here are the tasks in your list:
 3.[E][ ] continue reading book (from: now to: 2pm)
 ____________________________________________________________
 ```
-
+---
 #### Mark - Marks a task as done
 
 Input: `mark <task number>`
@@ -97,7 +98,7 @@ Nice! I've marked this task as done:
 [E][X] continue reading book (from: now to: 2pm)
 ____________________________________________________________
 ```
-
+---
 #### Unmark - Unmarks a task previously marked as done
 
 Input: `unmark <task number>`
@@ -114,7 +115,7 @@ OK, I've marked this task as not done yet:
 ____________________________________________________________
 
 ```
-
+---
 #### Delete - Deletes a task from the list
 
 Input: `delete <task number>`
@@ -131,7 +132,7 @@ Aight. Task deletus:
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ```
-
+---
 #### Find - Find a task based on a specific keyword
 
 Input: `find <keyword(s)>`
@@ -148,7 +149,7 @@ Nice! I've marked this task as done:
 [E][X] continue reading book (from: now to: 2pm)
 ____________________________________________________________
 ```
-
+---
 #### Bye - Exit the chatbot
 
 Input: `bye`
@@ -161,7 +162,20 @@ ____________________________________________________________
  Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
-
+---
 ## Saving and loading tasks
 * The chatbot automatically saves whatever tasks you have inputted
 * You will be able to recall the saved tasks after re-opening the chatbot
+
+## Command summary
+| Description                   | Example input                                    |
+|-------------------------------|--------------------------------------------------|
+| Add todo task                 | `todo read book`                                 |
+| Add deadline task             | `deadline finish reading /by tomorrow`           |
+| Add event task                | `event continue reading book /from 8am /to 10am` |
+| List all tasks                | `list`                                           |
+| Mark a task as done           | `mark 1`                                         |
+| Unmark a task                 | `unmark 1`                                       |
+| Delete a task                 | `delete 1`                                       |
+| Find a task containing a word | `find book`                                      |
+| Exit Doge                     | `bye`                                            |
