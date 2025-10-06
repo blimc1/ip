@@ -169,6 +169,7 @@ ____________________________________________________________
 * You will be able to recall the saved tasks after re-opening the chatbot
 
 ## Command summary
+
 | Description                   | Example input                                    |
 |-------------------------------|--------------------------------------------------|
 | Add todo task                 | `todo read book`                                 |
