@@ -167,3 +167,16 @@ ____________________________________________________________
 ## Saving and loading tasks
 * The chatbot automatically saves whatever tasks you have inputted
 * You will be able to recall the saved tasks after re-opening the chatbot
+
+## Command summary
+| Description                   | Example input                                    |
+|-------------------------------|--------------------------------------------------|
+| Add todo task                 | `todo read book`                                 |
+| Add deadline task             | `deadline finish reading /by tomorrow`           |
+| Add event task                | `event continue reading book /from 8am /to 10am` |
+| List all tasks                | `list`                                           |
+| Mark a task as done           | `mark 1`                                         |
+| Unmark a task                 | `unmark 1`                                       |
+| Delete a task                 | `delete 1`                                       |
+| Find a task containing a word | `find book`                                      |
+| Exit Doge                     | `bye`                                            |
