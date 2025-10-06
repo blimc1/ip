@@ -18,10 +18,7 @@ public class Ui {
         System.out.println(LINE);
     }
 
-    /**
-     * Displays the welcome message with logo.
-     */
-    public void printWelcome(){
+    public void showWelcome(){
         System.out.println("Hello from\n" + logo);
         printLine();
         System.out.println("Hello! Am Doge");
@@ -130,7 +127,7 @@ public class Ui {
     public void showMatchingTasks (ArrayList<Task> matches){
         printLine();
         if (matches.isEmpty()){
-            System.out.println("No matching tasks found.");
+            System.out.println("BONK! No matching tasks found.");
         } else {
             System.out.println("Matching tasks found:");
             for (int i = 0; i < matches.size(); i++) {

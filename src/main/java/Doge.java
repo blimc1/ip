@@ -37,7 +37,7 @@ public class Doge {
      * Displays the welcome message, reads user inputs and parses them, and handles errors.
      */
     public void run(){
-        ui.printWelcome();
+        ui.showWelcome();
         Scanner sc = new Scanner(System.in);
         while (true){
             try {
