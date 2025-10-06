@@ -14,7 +14,7 @@ public class Ui {
         System.out.println(LINE);
     }
 
-    public void printWelcome(){
+    public void showWelcome(){
         System.out.println("Hello from\n" + logo);
         printLine();
         System.out.println("Hello! Am Doge");

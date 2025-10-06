@@ -23,7 +23,7 @@ public class Doge {
     }
 
     public void run(){
-        ui.printWelcome();
+        ui.showWelcome();
         Scanner sc = new Scanner(System.in);
         while (true){
             try {
