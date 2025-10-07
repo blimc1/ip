@@ -146,9 +146,11 @@ Expected example input and output:
 ```
 find reading book
 ____________________________________________________________
-Nice! I've marked this task as done:
-[E][X] continue reading book (from: now to: 2pm)
+Matching tasks found:
+1.[D][ ] finish reading book (by: tomorrow)
+2.[E][ ] continue reading book (from: now to: 2pm)
 ____________________________________________________________
+
 ```
 ---
 #### Bye - Exit the chatbot
